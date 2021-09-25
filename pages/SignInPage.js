@@ -25,7 +25,6 @@ export default function SignInPage({ navigation }) {
   }, []);
 
   const doSignIn = () => {
-    //Email 로그인 버튼을 누를 때 실행되는 함수
     if (email == "") {
       setEmailError("이메일을 입력해주세요");
       return false;
@@ -39,8 +38,19 @@ export default function SignInPage({ navigation }) {
     } else {
       setPasswordError("");
     }
+    fetch("http://180.92.114.215/sum/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-    signIn(email, password, navigation);
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => console.log("Error"));
   };
   const setEmailFunc = (itemInputEmail) => {
     //이메일 상태값을 관리하는 함수
@@ -76,9 +86,7 @@ export default function SignInPage({ navigation }) {
               error={passwordError}
             />
           </Form>
-          {/* <Button full style={styles.snsSignUp}>
-            <Text>Facebook 로그인</Text>
-          </Button> */}
+
           <Button full style={styles.emailSignIn} onPress={doSignIn}>
             <Text>Email 로그인</Text>
           </Button>
@@ -92,7 +100,6 @@ export default function SignInPage({ navigation }) {
     <Loading />
   );
 }
-
 const styles = StyleSheet.create({
   container: {},
   backgroundImage: {
